@@ -26,7 +26,7 @@ def break_remove(ctxt, eid):
             with andbug.screed.section('remove all hook'):
                 for eid in ctxt.sess.emap.keys():
                     ctxt.sess.emap[eid].clear()
-                    andbug.screed.item('Hook <%s> removed' % eid)
+                    #andbug.screed.item('Hook <%s> removed' % eid)
         else:
             eid = int(eid)
             if eid in ctxt.sess.emap:

@@ -15,6 +15,10 @@
 
 'this script executes command modules found in andbug.commands'
 import os, os.path, sys, traceback, atexit
+sys.path.append('./lib')
+if os.path.isfile('./logs'):
+    os.remove('./logs')
+    os.mknod('./logs')
 
 def panic(why, exit=True, exc=False):
     sys.stderr.write("!! %s\n" % (why,))

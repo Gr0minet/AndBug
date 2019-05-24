@@ -16,7 +16,7 @@
 
 import andbug.command, andbug.screed
 
-@andbug.command.action('[<name>]', shell=True)
+@andbug.command.action('[<name>]', aliases=('r',), shell=True)
 def resume(ctxt, name=None):
     'resumes threads in the process'
     if name is None:

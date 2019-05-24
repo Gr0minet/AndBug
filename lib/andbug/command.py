@@ -87,6 +87,11 @@ class Context(object):
             self.findPid(pid)
         return args, opts
 
+    def set(self, pid):
+        self.findDev()
+        self.pid = pid
+        self.connect()
+
     def findDev(self, dev=None):
         'determines the device for the command based on dev'
         if self.dev is not None: return

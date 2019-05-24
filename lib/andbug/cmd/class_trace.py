@@ -42,4 +42,4 @@ def class_trace(ctxt, cpath):
             c.hookEntries(func = report_hit)
             andbug.screed.item('Hooked %s' % c)
     
-    ctxt.block_exit()
+    #ctxt.block_exit()

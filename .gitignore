@@ -1,0 +1,5 @@
+lib/andbug/cmd/*.pyc
+lib/andbug/*.pyc
+tests/*.pyc
+lib/andbug/jdwp.so
+build

@@ -19,19 +19,24 @@ from Queue import Queue
 
 def report_hit(t):
     t = t[0]
+    logfile = "./logs"
     try:
-        with andbug.screed.section("trace %s" % t):
-            f = t.frames[0]
-            name = str(f.loc)
-            if f.native:
-            	name += ' <native>'
-            with andbug.screed.item(name):
-            	for k, v in f.values.items():
-                	andbug.screed.item( "%s=%s" %(k, v))
+        #t.sess.suspend()
+        #with andbug.screed.section("trace %s" % t):
+        f = t.frames[0]
+        name = str(f.loc)
+        if f.native:
+            name += ' <native>'
+        with open(logfile, 'a') as logf:
+            logf.write(name + '\n')
+
+        #andbug.screed.item(name)
+        #for k, v in f.values.items():
+        #    andbug.screed.item( "%s=%s" %(k, v))
     finally:
         t.resume()
 
-def cmd_hook_methods(ctxt, cpath, mpath):
+def cmd_hook_methods(ctxt, cpath, mpath, verbose=False):
     for c in ctxt.sess.classes(cpath):
         for m in c.methods(mpath):
             l = m.firstLoc
@@ -39,7 +44,8 @@ def cmd_hook_methods(ctxt, cpath, mpath):
                 andbug.screed.item('Could not hook native %s' % l)
                 continue
             l.hook(func = report_hit)
-            andbug.screed.item('Hooked %s' % l)
+            if verbose:
+                andbug.screed.item('Hooked %s' % l)
 
 @andbug.command.action(
     '<method>', name='method-trace', aliases=('mt','mtrace'), shell=True
@@ -49,7 +55,7 @@ def method_trace(ctxt, mpath):
 	
     cpath, mname, mjni = andbug.options.parse_mquery(".".join(mpath.split('.')[0:-1]),  mpath.split('.')[-1])
 
-    with andbug.screed.section('Setting Hooks'):
-		cmd_hook_methods(ctxt, cpath, mname)
+    #with andbug.screed.section('Setting Hooks'):
+    cmd_hook_methods(ctxt, cpath, mname)
 
-    ctxt.block_exit()
+    #ctxt.block_exit()
