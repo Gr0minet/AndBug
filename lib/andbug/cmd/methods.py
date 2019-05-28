@@ -23,11 +23,13 @@ def get_methods(ctxt, cpath, mquery=None):
     title = "Methods " + ((cpath + "->" + mquery) if mquery else (cpath))
     #with andbug.screed.section(title):
     for m in ctxt.sess.classes(cpath).methods(name=mname, jni=mjni):
-        #andbug.screed.item(str(m))
         methods_list.append(str(m))
     return methods_list
 
 @andbug.command.action('<class-path> [<method-query>]')
 def methods(ctxt, cpath, mquery=None):
     'lists the methods of a class'
-    return get_methods(ctxt, cpath, mquery)
+    methods_list = get_methods(ctxt, cpath, mquery)
+    for m in methods_list:
+        andbug.screed.item(str(m))
+    return methods_list

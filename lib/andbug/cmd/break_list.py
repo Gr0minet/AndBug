@@ -17,7 +17,7 @@
 
 import andbug.command, andbug.screed
 
-@andbug.command.action('', name='break-list', shell=True)
+@andbug.command.action('', name='break-list', aliases=('bl',), shell=True)
 def break_list(ctxt):
     'list active breakpoints/hooks'
     with andbug.screed.section('Active Hooks'):

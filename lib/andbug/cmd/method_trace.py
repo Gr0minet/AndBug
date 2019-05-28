@@ -14,14 +14,16 @@
 
 'implementation of the "mtrace" command'
 
-import andbug.command, andbug.screed, andbug.options
+import andbug.command, andbug.screed, andbug.options, andbug.util
 from Queue import Queue
 
 def report_hit(t):
     t = t[0]
+    t = andbug.util.cur_thread
     logfile = "./logs"
     try:
-        #t.sess.suspend()
+        if andbug.util.stepmode_enabled:
+            t.sess.suspend()
         #with andbug.screed.section("trace %s" % t):
         f = t.frames[0]
         name = str(f.loc)
@@ -29,10 +31,10 @@ def report_hit(t):
             name += ' <native>'
         with open(logfile, 'a') as logf:
             logf.write(name + '\n')
+            for k, v in f.values.items():
+                logf.write( "\t%s=%s\n" %(k, v))
 
         #andbug.screed.item(name)
-        #for k, v in f.values.items():
-        #    andbug.screed.item( "%s=%s" %(k, v))
     finally:
         t.resume()
 

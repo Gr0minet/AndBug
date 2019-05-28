@@ -29,10 +29,11 @@ def panic(why, exit=True, exc=False):
         sys.exit(-1)
 
 def main(args):
-    import andbug, andbug.cmd, andbug.command
+    import andbug, andbug.cmd, andbug.command, andbug.util
 
     atexit.register(sys.stdout.write, '\x1B[0m\n')
     andbug.command.load_commands()
+    andbug.util.global_var_init()
 
     try:
         andbug.command.run_command(args)

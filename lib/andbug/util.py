@@ -28,6 +28,11 @@ import re
 from andbug.errors import *
 RE_INT = re.compile('^[0-9]+$')
 
+def global_var_init ():
+  global stepmode_enabled, cur_method
+  stepmode_enabled = False
+  cur_thread = None
+
 class ShellException( Exception ):
     def __init__( self, command, output, status ):
         self.command = command

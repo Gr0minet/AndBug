@@ -14,18 +14,21 @@
 
 'implementation of the "break" command'
 
-import andbug.command, andbug.screed, andbug.options
+import andbug.command, andbug.screed, andbug.options, andbug.util
 from Queue import Queue
 
 def report_hit(t):
     t = t[0]
     with andbug.screed.section("Breakpoint hit in %s, process suspended." % t):
         t.sess.suspend()
+        andbug.util.cur_thread = t
         for f in t.frames:
             name = str(f.loc)
             if f.native:
                 name += ' <native>'
             andbug.screed.item(name)
+            for k, v in f.values.items():
+                andbug.screed.item( "\t%s=%s\n" %(k, v))
 
 def cmd_break_methods(ctxt, cpath, mpath):
     for c in ctxt.sess.classes(cpath):

@@ -1144,7 +1144,7 @@ def pack_value(sess, buf, value, tag = None):
         raise RequestError(tag)
     if isinstance(tag, basestring):
         tag = ord(tag[0])
-    print "PACK", repr(tag), repr(value)
+    #print "PACK", repr(tag), repr(value)
     fn = pack_value_impl[tag]
     if fn is None:
         raise RequestError(tag)

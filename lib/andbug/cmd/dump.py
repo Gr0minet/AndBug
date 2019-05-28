@@ -15,34 +15,44 @@
 'implementation of the "methods" command'
 
 import andbug.command, andbug.options
+import javalang
 
 def find_last_method_line(source, first_line):
-    for last_line in range(first_line,len(source)):
-        if source[last_line][1].startswith('.end method'):
-            return last_line
+  for last_line in range(first_line,len(source)):
+    if source[last_line][1].startswith('.end method'):
+      return last_line
     return False
 
-@andbug.command.action('<class-path> [<method-query>]')
+  @andbug.command.action('<class-path> [<method-query>]')
 def dump(ctxt, cpath, mquery=None):
-    'dumps methods using original sources or apktool sources' 
-    cpath, mname, mjni = andbug.options.parse_mquery(cpath, mquery)
-    for method in ctxt.sess.classes(cpath).methods(name=mname, jni=mjni):
-        source = False
-        klass = method.klass.name           
+  'dumps methods using original sources or apktool sources' 
+  cpath, mname, mjni = andbug.options.parse_mquery(cpath, mquery)
 
-        first_line = method.firstLoc.line
-        if first_line is None:
-            print '!! could not determine first line of', method
-            continue
-        
-        source = andbug.source.load_source(klass)
-        if not source:
-            print '!! could not find source for', klass
-            continue
+  if not mquery:
+    source = andbug.source.load_source(andbug.options.cpath_std(cpath))
+    andbug.source.dump_source(source)
+    return
 
-        last_line = method.lastLoc.line or find_last_method_line(source, first_line)
-        if last_line is False:
-            print '!! could not determine last line of', method
-            continue
+  # TODO
+  #for method in ctxt.sess.classes(cpath).methods(name=mname, jni=mjni):
+  #  source = False
+  #    klass = method.klass.name           
 
-        andbug.source.dump_source(source[first_line:last_line], str(method))
+  #    source = andbug.source.load_source(klass)
+  #    if not source:
+  #      print '!! could not find source for', klass
+  #        continue
+
+  #    print method.firstLoc
+  #    first_line = method.firstLoc.line
+  #    if first_line is None:
+  #      print '!! could not determine first line of', method
+  #        continue
+
+
+  #    last_line = method.lastLoc.line or find_last_method_line(source, first_line)
+  #    if last_line is False:
+  #      print '!! could not determine last line of', method
+  #        continue
+
+  #    andbug.source.dump_source(source[first_line:last_line], str(method))

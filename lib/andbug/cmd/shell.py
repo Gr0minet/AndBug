@@ -45,6 +45,9 @@ def shell(ctxt):
         ctxt.shell = True
         andbug.screed.section(BANNER)
 
+    if ctxt.suspend:
+        andbug.command.run_command(['suspend'], ctxt=ctxt)
+
     while True:
         try:
             cmd = shlex.split(input())

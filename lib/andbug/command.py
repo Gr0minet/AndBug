@@ -36,9 +36,10 @@ from andbug.errors import *
 #TODO: make short_opts, long_opts, opt_table a dynamic parsing derivative.
 
 OPTIONS = (
-    ('pid', 'the process to be debugged, by pid or name'),
-    ('dev', 'the device or emulator to be debugged (see adb)'),
-    ('src', 'adds a directory where .java or .smali files could be found')
+    ('pid', 'the process to be debugged, by pid or name', True),
+    ('dev', 'the device or emulator to be debugged (see adb)', True),
+    ('src', 'adds a directory where .java or .smali files could be found', True),
+    ('wait', 'suspend the execution of the process when shell opens', False)
 )
 
 class Context(object):
@@ -53,6 +54,7 @@ class Context(object):
         self.pid = None
         self.dev = None
         self.shell = False
+        self.suspend = False
     
     def connect(self):
         'connects using vm.connect to the process if not already connected'
@@ -61,8 +63,16 @@ class Context(object):
 
     def parseOpts(self, args, options=OPTIONS, proc=True):
         'parse command options in OPTIONS format'
-        short_opts = ''.join(opt[0][0] + ':' for opt in options)
-        long_opts = list(opt[0] + '=' for opt in options)
+        short_opts = ''
+        for opt in options:
+            short_opts += opt[0][0]
+            if opt[2]:
+                short_opts += ':'
+        long_opts = ''
+        for opt in options:
+            long_opts += opt[0][0]
+            if opt[2]:
+                long_opts += '='
         opt_table = {}
 
         for opt in options:
@@ -85,6 +95,10 @@ class Context(object):
 
             self.findDev(dev)
             self.findPid(pid)
+
+        if t.get('wait') is not None:
+            self.suspend = True
+
         return args, opts
 
     def set(self, pid):

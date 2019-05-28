@@ -28,6 +28,11 @@ def parse_cpath(path):
 	else:
 		return'L' + path.replace('.', '/') + ';'
 
+def cpath_std(path):
+      if path.startswith('L') and path.endswith(';'):
+          return path[1:-1].replace('/', '.')
+      return path
+
 def parse_mspec(mspec):
     if (mspec == '*') or (not mspec):
         return None, None

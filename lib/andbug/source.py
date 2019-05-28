@@ -101,8 +101,6 @@ def dump_source(lines, head = None):
     if head:
         section(head)
     for row, line in lines:
-        line = line.strip()
-        if not line: continue
         lead = line[0]
         if lead == '.':
             if line.startswith(".method "):
